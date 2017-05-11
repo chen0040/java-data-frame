@@ -1,11 +1,15 @@
 package com.github.chen0040.data.frame;
 
 
+import com.github.chen0040.data.utils.FileUtils;
 import com.github.chen0040.data.utils.TupleTwo;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -184,5 +188,27 @@ public class BasicDataFrameUnitTest {
       dataFrame.addRow(row);
 
       AssertionsForClassTypes.assertThat(dataFrame.rowCount()).isEqualTo(2);
+   }
+
+   @Test
+   public void test_load_iris() throws IOException {
+
+      InputStream irisStream = FileUtils.getResource("iris.data");
+      DataFrame irisData = DataQuery.csv(",", false)
+              .from(irisStream)
+              .selectColumn(0).asInput("Sepal Length")
+              .selectColumn(1).asInput("Sepal Width")
+              .selectColumn(2).asInput("Petal Length")
+              .selectColumn(3).asInput("Petal Width")
+              .selectColumn(4).transform(label -> label).asOutput("Iris Type")
+              .build();
+
+      logger.info("head: {}", irisData.head(2));
+
+      irisData.stream().forEach(r -> logger.info("row: {}", r));
+      for(DataRow r : irisData) {
+         logger.info("row: {}", r);
+      }
+
    }
 }

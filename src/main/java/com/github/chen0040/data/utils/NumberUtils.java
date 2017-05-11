@@ -1,7 +1,7 @@
 package com.github.chen0040.data.utils;
 
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.github.chen0040.data.exceptions.NotImplementedException;
 
 import java.math.BigInteger;
 

@@ -6,12 +6,12 @@
 
     <groupId>com.github.chen0040</groupId>
     <artifactId>java-data-frame</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 
     <licenses>
         <license>
             <name>MIT</name>
-            <url>https://github.com/chen0040/java-data-frame/LICENSE.md</url>
+            <url>https://github.com/chen0040/java-data-frame/LICENSE</url>
             <comments>MIT License</comments>
         </license>
     </licenses>
@@ -37,8 +37,8 @@
     </issueManagement>
 
 
-    <name>Generalized Linear Models</name>
-    <description>Generalized linear models implemented in Java</description>
+    <name>DataFrame in Java</name>
+    <description>Some common patterns of data frame in Java</description>
     <url>https://github.com/chen0040/java-data-frame</url>
 
     <distributionManagement>
