@@ -20,11 +20,94 @@ Add the following dependency to your POM file:
 <dependency>
   <groupId>com.github.chen0040</groupId>
   <artifactId>java-data-frame</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
 # Usage
+
+## Crate a data frame manually
+
+The sample code below shows how to create a data frame manually:
+
+```java
+DataFrame dataFrame = new BasicDataFrame();
+
+DataRow row = dataFrame.newRow();
+row.setCell("column1", 0.1);
+row.setTargetCell("numericOutput", 0.2);
+row.setCategoricalTargetCell("categoricalOutput", "YES");
+
+dataFrame.addRow(row);
+
+// add more rows here
+
+// call lock to perform aggregation and prevent further addition of new rows
+dataFrame.lock();
+```
+
+Note that you need to call "dataFrame.lock()" after you finish adding rows so that aggregation can be performed. After this api call, the data frame
+will prevent further addition of new rows. To start adding new rows again, call "dataFrame.unlock()" before adding more rows.
+
+## Create a data frame using Sampler
+
+The sample code belows shows how to create a data frame using Sampler class:
+
+```java
+DataQuery.DataFrameQueryBuilder schema = DataQuery.blank()
+      .newInput("x1")
+      .newInput("x2")
+      .newOutput("y")
+      .end();
+
+// y = 4 + 0.5 * x1 + 0.2 * x2
+Sampler.DataSampleBuilder sampler = new Sampler()
+      .forColumn("x1").generate((name, index) -> randn() * 0.3 + index)
+      .forColumn("x2").generate((name, index) -> randn() * 0.3 + index * index)
+      .forColumn("y").generate((name, index) -> 4 + 0.5 * index + 0.2 * index * index + randn() * 0.3)
+      .end();
+
+DataFrame dataFrame = schema.build();
+
+dataFrame = sampler.sample(dataFrame, 200);
+```
+
+The sample code above creates a data frame consisting of 200 rows and 3 columns ("x1", "x2", "y")
+
+```java
+
+```
+
+# Print contents in a data frame
+
+The sample code below shows how to print the content in the data frame:
+
+```java
+System.out.pritnln(dataFrame.head(2));
+
+dataFrame.stream().forEach(r -> System.out.println("row: " + r));
+for(DataRow r : irisData) {
+ System.out.println("row: "+ r);
+}
+```
+
+# Sample and split
+
+The shuffle the content of a data frame:
+
+```java
+dataFrame.shuffle()
+```
+
+To split a data frame into two data frames:
+
+```
+TupleTwo<DataFrame, DataFrame> miniFrames = dataFrame.split(0.9);
+DataFrame frame1 = miniFrames._1();
+DataFrame frame2 = miniFrames._2();
+```
+
+The frame1 contains 90% of the rows in the original data frame, while frame2 contains the other 10% of the rows in the original data frame.
 
 ## Load from CSV file
 
@@ -99,18 +182,7 @@ DataFrame frame = DataQuery.libsvm().from(new FileInputStream("heart_scale.txt")
 ```
 
 
-# Print contents in a data frame
 
-The sample code below shows how to print the content in the data frame:
-
-```java
-System.out.pritnln(dataFrame.head(2));
-
-dataFrame.stream().forEach(r -> System.out.println("row: " + r));
-for(DataRow r : irisData) {
- System.out.println("row: "+ r);
-}
-```
 
 
 
