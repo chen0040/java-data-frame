@@ -159,12 +159,15 @@ public class BasicDataRow implements DataRow {
          String val = getCategoricalCell(name);
          List<String> levelsInFactor = levels.get(name);
          int index = levelsInFactor.indexOf(val);
-         for(int j=0; j < levelsInFactor.size(); ++i){
+         for(int j=0; j < levelsInFactor.size(); ++j){
             result.add(j == index ? 1.0 : 0.0);
+            if(levelsInFactor.size()==2){
+               break;
+            }
          }
       }
 
-      return CollectionUtils.toArray(result);
+      return CollectionUtils.toDoubleArray(result);
    }
 
    private void buildColumns(){
@@ -256,12 +259,16 @@ public class BasicDataRow implements DataRow {
          }
          sb.append(keys.get(i)).append(":").append(getCell(keys.get(i)));
       }
-      keys = getCategoricalColumnNames();
-      for(int i=0; i < keys.size(); ++i){
+
+      List<String> keys2 = getCategoricalColumnNames();
+      if(!keys2.isEmpty() && !keys.isEmpty()){
+         sb.append(", ");
+      }
+      for(int i=0; i < keys2.size(); ++i){
          if(i != 0){
             sb.append(", ");
          }
-         sb.append(keys.get(i)).append(":").append(getCategoricalCell(keys.get(i)));
+         sb.append(keys2.get(i)).append(":").append(getCategoricalCell(keys2.get(i)));
       }
       sb.append(" =>");
 

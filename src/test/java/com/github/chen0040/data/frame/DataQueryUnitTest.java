@@ -2,6 +2,7 @@ package com.github.chen0040.data.frame;
 
 
 import com.github.chen0040.data.utils.FileUtils;
+import com.github.chen0040.data.utils.NumberUtils;
 import com.github.chen0040.data.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +34,9 @@ public class DataQueryUnitTest {
       DataFrame frame = DataQuery.csv(columnSplitter, skipFirstLine)
               .from(inputStream)
               .selectColumn(column_livch).asInput("livch")
-              .selectColumn(column_age).asInput("age")
+              .selectColumn(column_age).transform(StringUtils::parseDouble).asInput("age")
               .selectColumn(column_age).transform(age -> Math.pow(StringUtils.parseDouble(age), 2)).asInput("age^2")
-              .selectColumn(column_urban).transform(label -> label.equals("Y") ? 1.0 : 0.0).asInput("urban")
+              .selectColumn(column_urban).asInput("urban")
               .selectColumn(column_use).transform(label -> label.equals("Y") ? 1.0 : 0.0).asOutput("use")
               .build();
 

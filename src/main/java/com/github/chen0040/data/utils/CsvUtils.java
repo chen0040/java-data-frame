@@ -104,7 +104,7 @@ public class CsvUtils {
                cvsSplitBy = cvsSplitBy + quoteSplitPM;
             }
 
-            String[] values = line.split(cvsSplitBy);
+            String[] values = filterEmpty(line.split(cvsSplitBy));
 
             if(containsQuote){
                for(int i=0; i < values.length; ++i){
@@ -127,4 +127,19 @@ public class CsvUtils {
 
       return success;
    }
+
+   private static String[] filterEmpty(String[] a) {
+      List<String> result = new ArrayList<>();
+      for(int i=0; i < a.length; ++i){
+         String v = a[i].trim();
+         if(StringUtils.isEmpty(v)){
+            continue;
+         }
+         result.add(v);
+      }
+
+      return CollectionUtils.toArray(result);
+
+   }
+
 }

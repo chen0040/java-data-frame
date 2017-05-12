@@ -42,8 +42,16 @@ public class CollectionUtils {
    }
 
 
-   public static double[] toArray(List<Double> list) {
+   public static double[] toDoubleArray(List<Double> list) {
       double[] result = new double[list.size()];
+      for(int i=0; i < list.size(); ++i) {
+         result[i] = list.get(i);
+      }
+      return result;
+   }
+
+   public static String[] toArray(List<String> list) {
+      String[] result = new String[list.size()];
       for(int i=0; i < list.size(); ++i) {
          result[i] = list.get(i);
       }
