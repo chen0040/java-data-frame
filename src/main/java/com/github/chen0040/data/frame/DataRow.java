@@ -2,6 +2,7 @@ package com.github.chen0040.data.frame;
 
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -15,7 +16,11 @@ public interface DataRow {
 
    void setCell(String columnName, double value);
 
+   void setCategoricalCell(String columnName, String value);
+
    List<String> getColumnNames();
+
+   List<String> getCategoricalColumnNames();
 
    List<String> getTargetColumnNames();
 
@@ -33,6 +38,10 @@ public interface DataRow {
 
    void setColumnNames(List<String> inputColumns);
 
+   void setCategoricalColumnNames(List<String> inputColumns);
+
+   void setLevels(Map<String, List<String>> levels);
+
    void setTargetColumnNames(List<String> outputColumns);
 
    void setCategoricalTargetColumnNames(List<String> outputColumns);
@@ -44,4 +53,6 @@ public interface DataRow {
    String targetColumnName();
 
    String categoricalTargetColumnName();
+
+   String getCategoricalCell(String key);
 }

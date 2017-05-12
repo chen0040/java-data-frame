@@ -1,6 +1,7 @@
 package com.github.chen0040.data.frame;
 
 
+import com.github.chen0040.data.utils.CollectionUtils;
 import com.github.chen0040.data.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -23,10 +24,15 @@ public class BasicDataRow implements DataRow {
    private final Map<String, String> categoricalTargets = new HashMap<>();
 
    private final Map<String, Double> values = new HashMap<>();
+   private final Map<String, String> categoricalValues = new HashMap<>();
 
    private final List<String> columns = new ArrayList<>();
+   private final List<String> categoricalColumns = new ArrayList<>();
+
    private final List<String> targetColumns = new ArrayList<>();
    private final List<String> categoricalTargetColumns = new ArrayList<>();
+
+   private final Map<String, List<String>> levels = new HashMap<>();
 
    @Override public double target() {
       return getTargetCell(targetColumnName());
@@ -67,6 +73,17 @@ public class BasicDataRow implements DataRow {
       columns.addAll(inputColumns);
    }
 
+   @Override public void setCategoricalColumnNames(List<String> inputColumns) {
+      categoricalColumns.clear();
+      categoricalColumns.addAll(inputColumns);
+   }
+
+   @Override public void setLevels(Map<String, List<String>> levels){
+      this.levels.clear();
+      this.levels.putAll(levels);
+   }
+
+
 
    @Override public void setTargetColumnNames(List<String> outputColumns) {
       targetColumns.clear();
@@ -90,7 +107,9 @@ public class BasicDataRow implements DataRow {
       targets.clear();
       categoricalTargets.clear();
       values.clear();
+      categoricalValues.clear();
       columns.clear();
+      categoricalColumns.clear();
       targetColumns.clear();
       categoricalTargetColumns.clear();
 
@@ -102,11 +121,16 @@ public class BasicDataRow implements DataRow {
          values.put(c, that.getCell(c));
       }
 
+      for(String c : that.getCategoricalColumnNames()){
+         categoricalValues.put(c, that.getCategoricalCell(c));
+      }
+
       for(String c : that.getCategoricalTargetColumnNames()) {
          categoricalTargets.put(c, that.getCategoricalTargetCell(c));
       }
 
       setColumnNames(that.getColumnNames());
+      setCategoricalColumnNames(that.getCategoricalColumnNames());
       setTargetColumnNames(that.getTargetColumnNames());
       setCategoricalTargetColumnNames(that.getCategoricalTargetColumnNames());
    }
@@ -124,17 +148,35 @@ public class BasicDataRow implements DataRow {
    @Override public double[] toArray() {
       List<String> cols = getColumnNames();
 
-      double[] result = new double[cols.size()];
+      List<Double> result = new ArrayList<>();
       for(int i=0; i < cols.size(); ++i) {
-         result[i] = getCell(cols.get(i));
+         result.add(getCell(cols.get(i)));
       }
-      return result;
+
+      cols = getCategoricalColumnNames();
+      for(int i=0; i < cols.size(); ++i) {
+         String name = cols.get(i);
+         String val = getCategoricalCell(name);
+         List<String> levelsInFactor = levels.get(name);
+         int index = levelsInFactor.indexOf(val);
+         for(int j=0; j < levelsInFactor.size(); ++i){
+            result.add(j == index ? 1.0 : 0.0);
+         }
+      }
+
+      return CollectionUtils.toArray(result);
    }
 
    private void buildColumns(){
       List<String> cols = values.keySet().stream().collect(Collectors.toList());
       cols.sort(String::compareTo);
       columns.addAll(cols);
+   }
+
+   private void buildCategoricalColumns(){
+      List<String> cols = categoricalValues.keySet().stream().collect(Collectors.toList());
+      cols.sort(String::compareTo);
+      categoricalColumns.addAll(cols);
    }
 
    private void buildTargetColumns(){
@@ -158,11 +200,26 @@ public class BasicDataRow implements DataRow {
    }
 
 
+   @Override public void setCategoricalCell(String columnName, String value) {
+      if(StringUtils.isEmpty(value)) {
+         categoricalValues.remove(columnName);
+      }
+
+      categoricalValues.put(columnName, value);
+   }
+
    @Override public List<String> getColumnNames() {
       if(columns.size() < values.size()) {
          buildColumns();
       }
       return columns;
+   }
+
+   @Override public List<String> getCategoricalColumnNames() {
+      if(categoricalColumns.size() < categoricalValues.size()){
+         buildCategoricalColumns();
+      }
+      return categoricalColumns;
    }
 
    @Override
@@ -185,6 +242,10 @@ public class BasicDataRow implements DataRow {
       return values.getOrDefault(key, 0.0);
    }
 
+   @Override public String getCategoricalCell(String key) {
+      return categoricalValues.getOrDefault(key, "");
+   }
+
    @Override
    public String toString(){
       StringBuilder sb = new StringBuilder();
@@ -194,6 +255,13 @@ public class BasicDataRow implements DataRow {
             sb.append(", ");
          }
          sb.append(keys.get(i)).append(":").append(getCell(keys.get(i)));
+      }
+      keys = getCategoricalColumnNames();
+      for(int i=0; i < keys.size(); ++i){
+         if(i != 0){
+            sb.append(", ");
+         }
+         sb.append(keys.get(i)).append(":").append(getCategoricalCell(keys.get(i)));
       }
       sb.append(" =>");
 

@@ -6,6 +6,7 @@ import com.github.chen0040.data.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.transform.Source;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.function.Function;
 public class DataQuery {
 
    public interface DataFrameQueryBuilder {
+      DataFrameQueryBuilder skipRows(int skippedRowCount);
       DataColumnBuilder selectColumn(int columnIndex);
       DataFrame build();
    }
@@ -33,7 +35,13 @@ public class DataQuery {
    }
 
    public interface FormatBuilder {
+      @Deprecated
       SourceBuilder csv(String splitter, boolean skipFirstLine);
+      SourceBuilder csv(String splitter);
+      default SourceBuilder csv() {
+         return csv(" ");
+      }
+
       SourceBuilder libsvm();
       DataTableBuilder blank();
    }
@@ -65,9 +73,12 @@ public class DataQuery {
       private final List<DataFrameColumn> inputColumns = new ArrayList<>();
       private final List<DataFrameColumn> outputColumns = new ArrayList<>();
       private InputStream dataInputStream;
-      private String csvSplitter;
+      private String csvSplitter = " ";
       private DataFileType fileType;
+
+      @Deprecated
       private boolean skipFirstLine = false;
+      private int skippedRowCount = 0;
 
       private static final Logger logger = LoggerFactory.getLogger(DataFrameBuilderX.class);
 
@@ -75,6 +86,11 @@ public class DataQuery {
 
       @Override public DataColumnBuilder selectColumn(int columnIndex) {
          selected = new DataFrameColumn("", columnIndex, StringUtils::parseDouble);
+         return this;
+      }
+
+      @Override public DataFrameQueryBuilder skipRows(int skippedRowCount) {
+         this.skippedRowCount = skippedRowCount;
          return this;
       }
 
@@ -86,7 +102,9 @@ public class DataQuery {
                throw new RuntimeException("data frame should not have either empty input columns or empty output columns");
             }
 
-            CsvUtils.csv(dataInputStream, csvSplitter, skipFirstLine, (words) -> {
+            int skippedLines = Math.max(this.skipFirstLine ? 1 : 0, this.skippedRowCount);
+
+            CsvUtils.csv(dataInputStream, csvSplitter, skippedLines, (words) -> {
                DataRow row = dataFrame.newRow();
 
                for (int i = 0; i < words.length; ++i) {
@@ -164,9 +182,15 @@ public class DataQuery {
          return dataFrame;
       }
 
-
+      @Deprecated
       @Override public SourceBuilder csv(String splitter, boolean skipFirstLine) {
          this.skipFirstLine = skipFirstLine;
+         csvSplitter = splitter;
+         fileType = DataFileType.Csv;
+         return this;
+      }
+
+      @Override public SourceBuilder csv(String splitter){
          csvSplitter = splitter;
          fileType = DataFileType.Csv;
          return this;
@@ -240,8 +264,17 @@ public class DataQuery {
       return new DataFrameBuilderX().libsvm();
    }
 
+   @Deprecated
    public static SourceBuilder csv(String splitter, boolean skipFirstLine) {
       return new DataFrameBuilderX().csv(splitter, skipFirstLine);
+   }
+
+   public static SourceBuilder csv(String splitter) {
+      return new DataFrameBuilderX().csv(splitter);
+   }
+
+   public static SourceBuilder csv(){
+      return new DataFrameBuilderX().csv();
    }
 
    public static DataTableBuilder blank() {

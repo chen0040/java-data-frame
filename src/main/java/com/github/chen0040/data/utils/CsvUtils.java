@@ -78,21 +78,20 @@ public class CsvUtils {
 
    }
 
-   public static boolean csv(InputStream inputStream, String cvsSplitBy, boolean skipFirstLine, Function<String[], Boolean> onLineReady, Consumer<Exception> onFailed){
+   public static boolean csv(InputStream inputStream, String cvsSplitBy, int skippedLineCount, Function<String[], Boolean> onLineReady, Consumer<Exception> onFailed){
 
       String line;
       if(cvsSplitBy==null) cvsSplitBy = ",";
 
       boolean success = true;
-      boolean firstLine = true;
       try(BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+         int lineCount = 0;
          while ((line = br.readLine()) != null) {
 
-            if(firstLine) {
-               firstLine = false;
-               if(skipFirstLine) {
-                  continue;
-               }
+            lineCount++;
+
+            if(lineCount <= skippedLineCount) {
+               continue;
             }
 
             line = line.trim();

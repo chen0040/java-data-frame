@@ -40,4 +40,13 @@ public class CollectionUtils {
       a.set(i, a.get(j));
       a.set(j, temp);
    }
+
+
+   public static double[] toArray(List<Double> list) {
+      double[] result = new double[list.size()];
+      for(int i=0; i < list.size(); ++i) {
+         result[i] = list.get(i);
+      }
+      return result;
+   }
 }
