@@ -18,6 +18,7 @@ public class BasicDataFrame implements DataFrame {
    private final List<InputDataColumn> inputDataColumns = new ArrayList<>();
    private final List<OutputDataColumn> outputDataColumns = new ArrayList<>();
    private boolean locked = false;
+   private final Map<String, List<String>> levels = new HashMap<>();
 
    @Override public int rowCount() {
       return rows.size();
@@ -36,6 +37,23 @@ public class BasicDataFrame implements DataFrame {
 
    @Override public List<OutputDataColumn> getOutputColumns() {
       return outputDataColumns;
+   }
+
+   @Override public List<String> getArrayDescriptors() {
+      List<String> numericInputColumns = inputDataColumns.stream().filter(c -> !c.isCategorical()).map(InputDataColumn::getColumnName).collect(Collectors.toList());
+      List<String> categoricalInputColumns = inputDataColumns.stream().filter(InputDataColumn::isCategorical).map(InputDataColumn::getColumnName).collect(Collectors.toList());
+
+      List<String> result = new ArrayList<>();
+      result.addAll(numericInputColumns);
+      for(String c : categoricalInputColumns){
+         List<String> levelsInFactor = levels.get(c);
+         int count = levelsInFactor.size();
+         if(count == 2) count = 1;
+         for(int j=0; j < count;++j){
+            result.add(levelsInFactor.get(j));
+         }
+      }
+      return result;
    }
 
 
@@ -141,7 +159,7 @@ public class BasicDataFrame implements DataFrame {
       numericOutputColumns.sort(String::compareTo);
       categoricalOutputColumns.sort(String::compareTo);
 
-      Map<String, List<String>> levels = new HashMap<>();
+      levels.clear();
 
       for(Map.Entry<String, Set<String>> entry : inputLevels.entrySet()){
          List<String> levelsInFactor = entry.getValue().stream().collect(Collectors.toList());

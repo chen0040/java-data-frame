@@ -19,6 +19,8 @@ public interface DataFrame extends Iterable<DataRow> {
 
    List<OutputDataColumn> getOutputColumns();
 
+   List<String> getArrayDescriptors();
+
    void unlock();
 
    boolean isLocked();
