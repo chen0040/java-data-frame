@@ -200,7 +200,7 @@ public class BasicDataFrameUnitTest {
               .selectColumn(1).asInput("Sepal Width")
               .selectColumn(2).asInput("Petal Length")
               .selectColumn(3).asInput("Petal Width")
-              .selectColumn(4).transform(label -> label).asOutput("Iris Type")
+              .selectColumn(4).asOutput("Iris Type")
               .build();
 
       logger.info("head: {}", irisData.head(2));

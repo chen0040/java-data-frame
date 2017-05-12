@@ -85,7 +85,7 @@ public class DataQuery {
       private DataFrameColumn selected = null;
 
       @Override public DataColumnBuilder selectColumn(int columnIndex) {
-         selected = new DataFrameColumn("", columnIndex, StringUtils::parseDouble);
+         selected = new DataFrameColumn("", columnIndex, x -> x);
          return this;
       }
 
@@ -110,7 +110,12 @@ public class DataQuery {
                for (int i = 0; i < words.length; ++i) {
                   for (DataFrameColumn c : inputColumns) {
                      if (c.index == i) {
-                        row.setCell(c.columnName, NumberUtils.toDouble(c.transformer.apply(words[i])));
+                        Object data = c.transformer.apply(words[i]);
+                        if(data instanceof String){
+                           row.setCategoricalCell(c.columnName, (String)data);
+                        } else {
+                           row.setCell(c.columnName, NumberUtils.toDouble(data));
+                        }
                      }
                   }
                   for (DataFrameColumn c : outputColumns) {
@@ -150,7 +155,12 @@ public class DataQuery {
                for (Map<Integer, String> row : rows) {
                   DataRow newRow = dataFrame.newRow();
                   for (DataFrameColumn c : inputColumns) {
-                     newRow.setCell(c.columnName, NumberUtils.toDouble(c.transformer.apply(row.get(c.index))));
+                     Object data = c.transformer.apply(row.get(c.index));
+                     if(data instanceof String) {
+                        newRow.setCategoricalCell(c.columnName, (String)data);
+                     } else {
+                        newRow.setCell(c.columnName, NumberUtils.toDouble(data));
+                     }
                   }
                   for (DataFrameColumn c : outputColumns) {
                      Object target = c.transformer.apply(row.get(c.index));
