@@ -159,11 +159,10 @@ public class BasicDataRow implements DataRow {
          String val = getCategoricalCell(name);
          List<String> levelsInFactor = levels.get(name);
          int index = levelsInFactor.indexOf(val);
-         for(int j=0; j < levelsInFactor.size(); ++j){
+         int count = levelsInFactor.size();
+         if(count == 2) count = 1;
+         for(int j=0; j < count; ++j){
             result.add(j == index ? 1.0 : 0.0);
-            if(levelsInFactor.size()==2){
-               break;
-            }
          }
       }
 

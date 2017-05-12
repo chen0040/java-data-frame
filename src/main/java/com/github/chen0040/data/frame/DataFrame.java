@@ -19,7 +19,7 @@ public interface DataFrame extends Iterable<DataRow> {
 
    List<OutputDataColumn> getOutputColumns();
 
-   List<String> getArrayDescriptors();
+   List<String> rowArrayDescriptors();
 
    void unlock();
 

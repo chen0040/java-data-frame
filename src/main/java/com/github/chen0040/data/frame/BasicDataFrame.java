@@ -39,7 +39,7 @@ public class BasicDataFrame implements DataFrame {
       return outputDataColumns;
    }
 
-   @Override public List<String> getArrayDescriptors() {
+   @Override public List<String> rowArrayDescriptors() {
       List<String> numericInputColumns = inputDataColumns.stream().filter(c -> !c.isCategorical()).map(InputDataColumn::getColumnName).collect(Collectors.toList());
       List<String> categoricalInputColumns = inputDataColumns.stream().filter(InputDataColumn::isCategorical).map(InputDataColumn::getColumnName).collect(Collectors.toList());
 
@@ -50,7 +50,7 @@ public class BasicDataFrame implements DataFrame {
          int count = levelsInFactor.size();
          if(count == 2) count = 1;
          for(int j=0; j < count;++j){
-            result.add(levelsInFactor.get(j));
+            result.add(c + ":" + levelsInFactor.get(j));
          }
       }
       return result;
