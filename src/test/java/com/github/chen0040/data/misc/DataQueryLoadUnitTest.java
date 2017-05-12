@@ -16,6 +16,6 @@ public class DataQueryLoadUnitTest {
    @Test
    public void test_load_calcium_dat() throws IOException {
       InputStream inputStream = FileUtils.getResource("calcium.dat");
-      
+
    }
 }

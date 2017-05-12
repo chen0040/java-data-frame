@@ -50,58 +50,118 @@ public class BasicDataFrame implements DataFrame {
 
 
    @Override public void lock() {
-      Map<String, Set<Double>> counts = new HashMap<>();
-      Set<String> numericOutputs = new HashSet<>();
-      Set<String> categoricalOutputs = new HashSet<>();
+
+      Map<String, Set<String>> inputLevels = new HashMap<>();
+      Map<String, Set<String>> outputLevels = new HashMap<>();
+
       for(DataRow row : rows){
          List<String> keys = row.getColumnNames();
          for(String key: keys) {
-            Set<Double> set;
+            Set<String> set;
 
-            if(counts.containsKey(key)){
-               set = counts.get(key);
+            if(!inputLevels.containsKey(key)){
+               set = new HashSet<>();
+               inputLevels.put(key, set);
+            }
+         }
+
+         keys = row.getCategoricalColumnNames();
+         for(String key: keys) {
+            Set<String> set;
+
+            if(inputLevels.containsKey(key)){
+               set = inputLevels.get(key);
             } else {
                set = new HashSet<>();
-               counts.put(key, set);
+               inputLevels.put(key, set);
             }
 
-            set.add(row.getCell(key));
+            set.add(row.getCategoricalCell(key));
          }
-         numericOutputs.addAll(row.getTargetColumnNames());
-         categoricalOutputs.addAll(row.getCategoricalTargetColumnNames());
+
+         keys = row.getTargetColumnNames();
+         for(String key: keys) {
+            Set<String> set;
+
+            if(!outputLevels.containsKey(key)){
+               set = new HashSet<>();
+               outputLevels.put(key, set);
+            }
+         }
+
+         row.getCategoricalTargetColumnNames();
+         for(String key: keys) {
+            Set<String> set;
+
+            if(outputLevels.containsKey(key)){
+               set = outputLevels.get(key);
+            } else {
+               set = new HashSet<>();
+               outputLevels.put(key, set);
+            }
+
+            set.add(row.getCategoricalTargetCell(key));
+         }
       }
 
       inputDataColumns.clear();
-      for(Map.Entry<String, Set<Double>> entry : counts.entrySet()){
-         Set<Double> set = entry.getValue();
+      for(Map.Entry<String, Set<String>> entry : inputLevels.entrySet()){
+         Set<String> set = entry.getValue();
          InputDataColumn inputDataColumn = new InputDataColumn();
          inputDataColumn.setColumnName(entry.getKey());
-         if(set.size() < rowCount() / 3) {
-            inputDataColumn.setLevels(set);
-         }
+
+         List<String> levels = set.stream().collect(Collectors.toList());
+         levels.sort(String::compareTo);
+         inputDataColumn.setLevels(levels);
          inputDataColumns.add(inputDataColumn);
       }
 
       outputDataColumns.clear();
-      outputDataColumns.addAll(numericOutputs.stream().map(o -> new OutputDataColumn(o, false)).collect(Collectors.toList()));
-      outputDataColumns.addAll(categoricalOutputs.stream().map(o -> new OutputDataColumn(o, true)).collect(Collectors.toList()));
+      for(Map.Entry<String, Set<String>> entry : outputLevels.entrySet()){
+         Set<String> set = entry.getValue();
+         OutputDataColumn outputDataColumn = new OutputDataColumn();
+         outputDataColumn.setColumnName(entry.getKey());
+
+         List<String> levels = set.stream().collect(Collectors.toList());
+         levels.sort(String::compareTo);
+         outputDataColumn.setLevels(levels);
+         outputDataColumns.add(outputDataColumn);
+      }
 
       inputDataColumns.sort((a, b) -> a.getColumnName().compareTo(b.getColumnName()));
       outputDataColumns.sort((a, b) -> a.getColumnName().compareTo(b.getColumnName()));
 
-      List<String> inputColumns = inputDataColumns.stream().map(InputDataColumn::getColumnName).collect(Collectors.toList());
+      List<String> numericInputColumns = inputDataColumns.stream().filter(c -> !c.isCategorical()).map(InputDataColumn::getColumnName).collect(Collectors.toList());
+      List<String> categoricalInputColumns = inputDataColumns.stream().filter(InputDataColumn::isCategorical).map(InputDataColumn::getColumnName).collect(Collectors.toList());
       List<String> numericOutputColumns = outputDataColumns.stream().filter(c -> !c.isCategorical()).map(OutputDataColumn::getColumnName).collect(Collectors.toList());
       List<String> categoricalOutputColumns = outputDataColumns.stream().filter(OutputDataColumn::isCategorical).map(OutputDataColumn::getColumnName).collect(Collectors.toList());
 
-      inputColumns.sort(String::compareTo);
+      numericInputColumns.sort(String::compareTo);
+      categoricalInputColumns.sort(String::compareTo);
       numericOutputColumns.sort(String::compareTo);
       categoricalOutputColumns.sort(String::compareTo);
 
+      Map<String, List<String>> levels = new HashMap<>();
+
+      for(Map.Entry<String, Set<String>> entry : inputLevels.entrySet()){
+         List<String> levelsInFactor = entry.getValue().stream().collect(Collectors.toList());
+         levelsInFactor.sort(String::compareTo);
+         levels.put(entry.getKey(), levelsInFactor);
+      }
+
+      for(Map.Entry<String, Set<String>> entry : outputLevels.entrySet()){
+         List<String> levelsInFactor = entry.getValue().stream().collect(Collectors.toList());
+         levelsInFactor.sort(String::compareTo);
+         levels.put(entry.getKey(), levelsInFactor);
+      }
+
       for(int i=0; i < rowCount(); ++i) {
          DataRow row = row(i);
-         row.setColumnNames(inputColumns);
+         row.setColumnNames(numericInputColumns);
+         row.setCategoricalColumnNames(categoricalInputColumns);
          row.setTargetColumnNames(numericOutputColumns);
          row.setCategoricalTargetColumnNames(categoricalOutputColumns);
+         row.setLevels(levels);
       }
 
       locked = true;

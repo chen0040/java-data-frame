@@ -2,8 +2,11 @@ package com.github.chen0040.data.frame;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -13,7 +16,7 @@ public class InputDataColumn implements Serializable {
 
    private int sourceColumnIndex;
    private String columnName;
-   private Set<Double> levels = new HashSet<>();
+   private final List<String> levels = new ArrayList<>();
 
    public InputDataColumn(){
 
@@ -37,6 +40,9 @@ public class InputDataColumn implements Serializable {
       this.levels.addAll(that.levels);
    }
 
+   public boolean isCategorical(){
+      return !levels.isEmpty();
+   }
 
    public void setSourceColumnIndex(int key) {
       this.sourceColumnIndex = key;
@@ -50,8 +56,13 @@ public class InputDataColumn implements Serializable {
       return columnName;
    }
 
-   public void setLevels(Set<Double> set) {
-      levels = set;
+   public void setLevels(List<String> levels) {
+      this.levels.clear();
+      this.levels.addAll(levels);
+   }
+
+   public List<String> getLevels(){
+      return levels;
    }
 
    @Override

@@ -171,7 +171,7 @@ public class DataQuery {
                dataFrame.getInputColumns().add(new InputDataColumn(c.columnName));
             }
             for(DataFrameColumn c : outputColumns) {
-               dataFrame.getOutputColumns().add(new OutputDataColumn(c.columnName, false));
+               dataFrame.getOutputColumns().add(new OutputDataColumn(c.columnName));
             }
          }
 
