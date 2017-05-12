@@ -34,7 +34,8 @@ The sample code below shows how to create a data frame manually:
 DataFrame dataFrame = new BasicDataFrame();
 
 DataRow row = dataFrame.newRow();
-row.setCell("column1", 0.1);
+row.setCell("inputColumn1", 0.1);
+row.setCategoricalCell("inputColumn2", "Hello");
 row.setTargetCell("numericOutput", 0.2);
 row.setCategoricalTargetCell("categoricalOutput", "YES");
 
@@ -139,12 +140,10 @@ String columnSplitter = ",";
 InputStream inputStream = new FileInputStream("contraception.csv");
 DataFrame frame = DataQuery.csv(columnSplitter, skipFirstLine)
         .from(inputStream)
-        .selectColumn(column_livch).transform(cell -> cell.equals("1") ? 1.0 : 0.0).asInput("livch1")
-        .selectColumn(column_livch).transform(cell -> cell.equals("2") ? 1.0 : 0.0).asInput("livch2")
-        .selectColumn(column_livch).transform(cell -> cell.equals("3+") ? 1.0 : 0.0).asInput("livch3")
-        .selectColumn(column_age).asInput("age")
+        .selectColumn(column_livch).asCategory().asInput("livch")
+        .selectColumn(column_age).asNumeric().asInput("age")
         .selectColumn(column_age).transform(cell -> Math.pow(StringUtils.parseDouble(cell), 2)).asInput("age^2")
-        .selectColumn(column_urban).transform(cell -> cell.equals("Y") ? 1.0 : 0.0).asInput("urban")
+        .selectColumn(column_urban).asCategory().asInput("urban")
         .selectColumn(column_use).transform(cell -> cell.equals("Y") ? 1.0 : 0.0).asOutput("use")
         .build();
 ```
@@ -165,11 +164,11 @@ In the above case, the output of the data frame is numerical, the code sample be
 InputStream irisStream = new FileInputStream("iris.data");
 DataFrame irisData = DataQuery.csv(",", false)
       .from(irisStream)
-      .selectColumn(0).asInput("Sepal Length")
-      .selectColumn(1).asInput("Sepal Width")
-      .selectColumn(2).asInput("Petal Length")
-      .selectColumn(3).asInput("Petal Width")
-      .selectColumn(4).transform(label -> label).asOutput("Iris Type")
+      .selectColumn(0).asNumeric().asInput("Sepal Length")
+      .selectColumn(1).asNumeric().asInput("Sepal Width")
+      .selectColumn(2).asNumeric().asInput("Petal Length")
+      .selectColumn(3).asNumeric().asInput("Petal Width")
+      .selectColumn(4).asCategory().asOutput("Iris Type")
       .build();
 ```
 

@@ -28,13 +28,13 @@ public class DataQueryUnitTest {
       int column_age = 5;
       int column_urban = 6;
 
-      boolean skipFirstLine = true;
       String columnSplitter = ",";
       InputStream inputStream = FileUtils.getResource("contraception.csv");
-      DataFrame frame = DataQuery.csv(columnSplitter, skipFirstLine)
+      DataFrame frame = DataQuery.csv(columnSplitter)
               .from(inputStream)
+              .skipRows(1)
               .selectColumn(column_livch).asInput("livch")
-              .selectColumn(column_age).transform(StringUtils::parseDouble).asInput("age")
+              .selectColumn(column_age).asNumeric().asInput("age")
               .selectColumn(column_age).transform(age -> Math.pow(StringUtils.parseDouble(age), 2)).asInput("age^2")
               .selectColumn(column_urban).asInput("urban")
               .selectColumn(column_use).transform(label -> label.equals("Y") ? 1.0 : 0.0).asOutput("use")
@@ -64,4 +64,6 @@ public class DataQueryUnitTest {
 
       logger.info("row count: {}", frame.rowCount());
    }
+
+
 }

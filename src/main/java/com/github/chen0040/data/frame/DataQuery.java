@@ -30,6 +30,12 @@ public class DataQuery {
 
    public interface DataColumnBuilder {
       DataColumnBuilder transform(Function<String, Object> columnTransformer);
+      default DataColumnBuilder asNumeric(){
+         return transform(StringUtils::parseDouble);
+      }
+      default DataColumnBuilder asCategory(){
+         return transform(String::trim);
+      }
       DataFrameQueryBuilder asInput(String columnName);
       DataFrameQueryBuilder asOutput(String columnName);
    }
@@ -39,7 +45,7 @@ public class DataQuery {
       SourceBuilder csv(String splitter, boolean skipFirstLine);
       SourceBuilder csv(String splitter);
       default SourceBuilder csv() {
-         return csv(" ");
+         return csv("\\s");
       }
 
       SourceBuilder libsvm();
@@ -73,7 +79,7 @@ public class DataQuery {
       private final List<DataFrameColumn> inputColumns = new ArrayList<>();
       private final List<DataFrameColumn> outputColumns = new ArrayList<>();
       private InputStream dataInputStream;
-      private String csvSplitter = " ";
+      private String csvSplitter = "\\s";
       private DataFileType fileType;
 
       @Deprecated
@@ -98,8 +104,8 @@ public class DataQuery {
          final BasicDataFrame dataFrame = new BasicDataFrame();
 
          if(fileType == DataFileType.Csv) {
-            if(inputColumns.isEmpty() || outputColumns.isEmpty()){
-               throw new RuntimeException("data frame should not have either empty input columns or empty output columns");
+            if(inputColumns.isEmpty()){
+               throw new RuntimeException("data frame should not have empty input columns");
             }
 
             int skippedLines = Math.max(this.skipFirstLine ? 1 : 0, this.skippedRowCount);

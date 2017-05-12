@@ -55,7 +55,6 @@ public class BasicDataFrame implements DataFrame {
       Map<String, Set<String>> outputLevels = new HashMap<>();
 
       for(DataRow row : rows){
-         System.out.println(row);
          List<String> keys = row.getColumnNames();
          for(String key: keys) {
             Set<String> set;
