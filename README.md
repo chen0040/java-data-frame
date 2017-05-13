@@ -2,7 +2,7 @@
 
 Package provides the core data frame implementation for numerical computation
 
-[![Build Status](https://travis-ci.org/chen0040/java-glm.svg?branch=master)](https://travis-ci.org/chen0040/java-glm) [![Coverage Status](https://coveralls.io/repos/github/chen0040/java-glm/badge.svg?branch=master)](https://coveralls.io/github/chen0040/java-glm?branch=master) 
+[![Build Status](https://travis-ci.org/chen0040/java-data-frame.svg?branch=master)](https://travis-ci.org/chen0040/java-data-frame) [![Coverage Status](https://coveralls.io/repos/github/chen0040/java-data-frame/badge.svg?branch=master)](https://coveralls.io/github/chen0040/java-data-frame?branch=master) 
 
 # Features
 
