@@ -20,7 +20,7 @@ Add the following dependency to your POM file:
 <dependency>
   <groupId>com.github.chen0040</groupId>
   <artifactId>java-data-frame</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
 </dependency>
 ```
 
@@ -90,6 +90,21 @@ dataFrame.stream().forEach(r -> System.out.println("row: " + r));
 for(DataRow r : irisData) {
  System.out.println("row: "+ r);
 }
+```
+
+# Filtering 
+
+The sample code below create a new data frame from the old data frame using the filter predicate 
+
+```java
+DataFrame filtered = oldDataFrame.filter(row -> { ... });
+```
+
+# Clone
+
+The sample code below create a new data frame from the old data frame
+```java
+DataFrame clone = oldDataFrame.makeCopy()
 ```
 
 # Sample and split

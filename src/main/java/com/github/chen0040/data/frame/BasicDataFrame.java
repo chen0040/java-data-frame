@@ -5,6 +5,7 @@ import com.github.chen0040.data.utils.CollectionUtils;
 import com.github.chen0040.data.utils.TupleTwo;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -249,6 +250,48 @@ public class BasicDataFrame implements DataFrame {
 
    @Override public Stream<DataRow> stream() {
       return rows.stream();
+   }
+
+
+   @Override public DataFrame makeCopy() {
+      BasicDataFrame clone = new BasicDataFrame();
+      clone.copy(this);
+      return clone;
+   }
+
+   private void copy(DataFrame that){
+      rows.clear();
+      inputDataColumns.clear();
+      outputDataColumns.clear();
+      levels.clear();
+
+      unlock();
+
+      for(DataRow row : that.rows()){
+         DataRow newRow = newRow();
+         newRow.copy(row);
+         addRow(row);
+      }
+
+      lock();
+   }
+
+
+   @Override public DataFrame filter(Predicate<DataRow> predicate) {
+      DataFrame clone = new BasicDataFrame();
+      for(DataRow row : rows){
+         if(predicate.test(row)){
+            DataRow newRow = clone.newRow();
+            newRow.copy(row);
+         }
+      }
+      clone.lock();
+      return clone;
+   }
+
+
+   @Override public Iterable<? extends DataRow> rows() {
+      return rows;
    }
 
 

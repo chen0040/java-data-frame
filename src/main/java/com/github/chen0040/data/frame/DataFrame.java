@@ -4,6 +4,7 @@ package com.github.chen0040.data.frame;
 import com.github.chen0040.data.utils.TupleTwo;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 
@@ -38,4 +39,10 @@ public interface DataFrame extends Iterable<DataRow> {
    TupleTwo<DataFrame, DataFrame> split(double ratio);
 
    Stream<DataRow> stream();
+
+   DataFrame makeCopy();
+
+   DataFrame filter(Predicate<DataRow> predicate);
+
+   Iterable<? extends DataRow> rows();
 }
