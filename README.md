@@ -20,7 +20,7 @@ Add the following dependency to your POM file:
 <dependency>
   <groupId>com.github.chen0040</groupId>
   <artifactId>java-data-frame</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.7</version>
 </dependency>
 ```
 
@@ -124,6 +124,52 @@ DataFrame frame2 = miniFrames._2();
 ```
 
 The frame1 contains 90% of the rows in the original data frame, while frame2 contains the other 10% of the rows in the original data frame.
+
+
+## Convert numerical columns to categorical columns
+
+
+For some algorithms which needs to treat numerical columns as categorical column, the library provides the KMeanDiscretizer to do this conversion:
+
+The following line transforms a data frame which has a number numerical columns to a data frame which contains the categorical columns with numerical columns convert to categorical columns:
+
+```java
+KMeansDiscretizer discretizer =new KMeansDiscretizer();
+discretizer.setMaxLevelCount(12); // set number of discrete values for each numerical column
+// discretizer.setMaxIters(500); // specifies the number of iterations to run k-means
+
+DataFrame newFrame = discretizer.fitAndTransform(dataFrame);
+```
+
+The sample code belows is a complete code to illustrate this operation:
+
+
+```java
+InputStream inputStream = FileUtils.getResource("carmileage.dat");
+
+DataQuery.DataFrameQueryBuilder schema = DataQuery.csv().from(inputStream)
+      .skipRows(29)
+      .selectColumn(0).asCategory().asInput("MAKE/MODEL")
+      .selectColumn(1).asNumeric().asInput("VOL")
+      .selectColumn(2).asNumeric().asInput("HP")
+      .selectColumn(3).asNumeric().asOutput("MPG")
+      .selectColumn(4).asNumeric().asInput("SP")
+      .selectColumn(5).asNumeric().asInput("WT");
+
+DataFrame dataFrame = schema.build();
+System.out.println(dataFrame.head(10));
+System.out.println("categorical column count: " + dataFrame.getAllColumns().stream().filter(DataColumn::isCategorical).count());
+System.out.println("numerical column count: " + dataFrame.getAllColumns().stream().filter(DataColumn::isNumerical).count());
+
+KMeansDiscretizer discretizer =new KMeansDiscretizer();
+discretizer.setMaxLevelCount(12); // set number of discrete values for each numerical column
+
+DataFrame newFrame = discretizer.fitAndTransform(dataFrame);
+
+System.out.println(newFrame.head(10));
+System.out.println("categorical column count: " + newFrame.getAllColumns().stream().filter(DataColumn::isCategorical).count());
+System.out.println("numerical column count: " + newFrame.getAllColumns().stream().filter(DataColumn::isNumerical).count());
+```
 
 ## Load from CSV file
 

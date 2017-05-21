@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Created by xschen on 29/4/2017.
  */
-public class InputDataColumn implements Serializable {
+public class InputDataColumn implements Serializable, DataColumn {
 
    private int sourceColumnIndex;
    private String columnName;
@@ -73,5 +73,10 @@ public class InputDataColumn implements Serializable {
 
    public String summary() {
       return columnName + ":discrete=" + levels.size();
+   }
+
+   @Override
+   public boolean isOutputColumn(){
+      return false;
    }
 }

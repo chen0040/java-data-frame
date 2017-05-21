@@ -4,6 +4,7 @@ package com.github.chen0040.data.frame;
 import com.github.chen0040.data.utils.TupleTwo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -19,6 +20,8 @@ public interface DataFrame extends Iterable<DataRow> {
    List<InputDataColumn> getInputColumns();
 
    List<OutputDataColumn> getOutputColumns();
+
+   List<DataColumn> getAllColumns();
 
    List<String> rowArrayDescriptors();
 
@@ -45,4 +48,6 @@ public interface DataFrame extends Iterable<DataRow> {
    DataFrame filter(Predicate<DataRow> predicate);
 
    Iterable<? extends DataRow> rows();
+
+   Map<String, List<String>> getLevels();
 }

@@ -40,6 +40,15 @@ public class BasicDataFrame implements DataFrame {
       return outputDataColumns;
    }
 
+
+   @Override public List<DataColumn> getAllColumns() {
+      List<DataColumn> result = new ArrayList<>();
+      result.addAll(inputDataColumns);
+      result.addAll(outputDataColumns);
+      return result;
+   }
+
+
    @Override public List<String> rowArrayDescriptors() {
       List<String> numericInputColumns = inputDataColumns.stream().filter(c -> !c.isCategorical()).map(InputDataColumn::getColumnName).collect(Collectors.toList());
       List<String> categoricalInputColumns = inputDataColumns.stream().filter(InputDataColumn::isCategorical).map(InputDataColumn::getColumnName).collect(Collectors.toList());
@@ -297,5 +306,9 @@ public class BasicDataFrame implements DataFrame {
 
    @Override public Iterator<DataRow> iterator() {
       return rows.iterator();
+   }
+
+   @Override public Map<String, List<String>> getLevels(){
+      return levels;
    }
 }
