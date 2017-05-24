@@ -133,6 +133,11 @@ public class BasicDataRow implements DataRow {
       setCategoricalColumnNames(that.getCategoricalColumnNames());
       setTargetColumnNames(that.getTargetColumnNames());
       setCategoricalTargetColumnNames(that.getCategoricalTargetColumnNames());
+
+      levels.clear();
+      for(Map.Entry<String, List<String>> entry : that.getLevels().entrySet()){
+         levels.put(entry.getKey(), CollectionUtils.clone(entry.getValue(), x-> x));
+      }
    }
 
 
@@ -247,6 +252,12 @@ public class BasicDataRow implements DataRow {
    @Override public String getCategoricalCell(String key) {
       return categoricalValues.getOrDefault(key, "");
    }
+
+
+   @Override public Map<String, List<String>> getLevels() {
+      return levels;
+   }
+
 
    @Override
    public String toString(){

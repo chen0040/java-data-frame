@@ -55,4 +55,6 @@ public interface DataRow {
    String categoricalTargetColumnName();
 
    String getCategoricalCell(String key);
+
+   Map<String,List<String>> getLevels();
 }

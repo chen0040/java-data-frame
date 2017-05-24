@@ -6,12 +6,12 @@
 
     <groupId>com.github.chen0040</groupId>
     <artifactId>java-data-frame</artifactId>
-    <version>1.0.9</version>
+    <version>1.0.10</version>
 
     <licenses>
         <license>
             <name>MIT</name>
-            <url>https://github.com/chen0040/java-data-frame/LICENSE</url>
+            <url>https://github.com/chen0040/java-data-frame/blob/master/LICENSE</url>
             <comments>MIT License</comments>
         </license>
     </licenses>

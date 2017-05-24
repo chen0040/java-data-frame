@@ -4,6 +4,7 @@ package com.github.chen0040.data.frame;
 import com.github.chen0040.data.utils.FileUtils;
 import com.github.chen0040.data.utils.NumberUtils;
 import com.github.chen0040.data.utils.StringUtils;
+import com.github.chen0040.data.utils.TupleTwo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
@@ -11,6 +12,8 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
 /**
@@ -63,6 +66,38 @@ public class DataQueryUnitTest {
       }
 
       logger.info("row count: {}", frame.rowCount());
+   }
+
+
+   @Test
+   public void test_testdata() throws IOException {
+      InputStream is = FileUtils.getResource("testdata.csv");
+      DataFrame dataFrame = DataQuery.csv(",")
+              .from(is)
+              .selectColumn(0).asCategory().asInput("a")
+              .selectColumn(1).asCategory().asInput("b")
+              .selectColumn(2).asNumeric().asInput("c")
+              .selectColumn(3).asNumeric().asInput("d")
+              .selectColumn(4).asCategory().asInput("e")
+              .selectColumn(5).asCategory().asInput("f")
+              .selectColumn(6).asNumeric().asInput("g")
+              .selectColumn(7).asNumeric().asInput("h")
+              .selectColumn(8).asCategory().asInput("i")
+              .selectColumn(9).asCategory().asInput("j")
+              .selectColumn(10).asCategory().asOutput("OUT")
+              .build();
+
+      TupleTwo<DataFrame, DataFrame> parts = dataFrame.shuffle().split(0.9);
+
+      DataFrame trainingData = parts._1();
+      DataFrame crossValidationData = parts._2();
+
+      System.out.println(crossValidationData.head(10));
+
+      for(int i=0; i < trainingData.rowCount(); ++i){
+         double[] x = trainingData.row(i).toArray();
+         assertThat(x).isNotNull();
+      }
    }
 
 
