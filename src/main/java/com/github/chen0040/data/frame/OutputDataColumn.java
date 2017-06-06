@@ -10,6 +10,7 @@ import java.util.List;
  * Created by xschen on 5/5/2017.
  */
 public class OutputDataColumn implements Serializable, DataColumn {
+   private static final long serialVersionUID = -3482432625139406828L;
    private String columnName;
    private final List<String> levels = new ArrayList<>();
 

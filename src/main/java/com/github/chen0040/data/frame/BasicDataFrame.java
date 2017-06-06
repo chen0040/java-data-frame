@@ -4,6 +4,7 @@ package com.github.chen0040.data.frame;
 import com.github.chen0040.data.utils.CollectionUtils;
 import com.github.chen0040.data.utils.TupleTwo;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -13,8 +14,9 @@ import java.util.stream.Stream;
 /**
  * Created by xschen on 1/5/2017.
  */
-public class BasicDataFrame implements DataFrame {
+public class BasicDataFrame implements DataFrame, Serializable {
 
+   private static final long serialVersionUID = 4096198912048757493L;
    private final List<DataRow> rows = new ArrayList<>();
    private final List<InputDataColumn> inputDataColumns = new ArrayList<>();
    private final List<OutputDataColumn> outputDataColumns = new ArrayList<>();

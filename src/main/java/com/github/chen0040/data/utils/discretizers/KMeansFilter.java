@@ -1,5 +1,6 @@
 package com.github.chen0040.data.utils.discretizers;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,8 +10,9 @@ import java.util.Random;
 /**
  * Created by xschen on 18/8/15.
  */
-public class KMeansFilter {
+public class KMeansFilter implements Serializable {
 
+    private static final long serialVersionUID = -5850969045455896812L;
     private static Random random = new Random();
     private int clusterCount;
     private double[] clusters;

@@ -4,6 +4,7 @@ package com.github.chen0040.data.frame;
 import com.github.chen0040.data.utils.CollectionUtils;
 import com.github.chen0040.data.utils.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +19,9 @@ import java.util.stream.Collectors;
  * column: a column represents an input column for which values are numeric
  * target column: a target column represents an output column for which values are numeric
  */
-public class BasicDataRow implements DataRow {
+public class BasicDataRow implements DataRow, Serializable {
 
+   private static final long serialVersionUID = -1932292620125077757L;
    private final Map<String, Double> targets = new HashMap<>();
    private final Map<String, String> categoricalTargets = new HashMap<>();
 

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  */
 public class InputDataColumn implements Serializable, DataColumn {
 
+   private static final long serialVersionUID = -3355436850471047863L;
    private int sourceColumnIndex;
    private String columnName;
    private final List<String> levels = new ArrayList<>();

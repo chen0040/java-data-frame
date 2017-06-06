@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +18,9 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class KMeansDiscretizer implements AttributeValueDiscretizer {
+public class KMeansDiscretizer implements AttributeValueDiscretizer, Serializable {
 
+    private static final long serialVersionUID = 2193706516691610469L;
     @Setter(AccessLevel.NONE)
     private final Map<String, KMeansFilter> filters = new HashMap<>();
 
