@@ -38,6 +38,15 @@ public class Standardization implements Cloneable {
         query(batch);
     }
 
+    public void fit(List<double[]> batch) {
+        query(batch);
+    }
+
+    public void fit(DataFrame batch) {
+        query(batch);
+    }
+
+
     public double[] revert(double[] x){
         double[] y = new double[x.length];
         for(int i = 0; i < x.length; ++i){
