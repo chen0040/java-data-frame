@@ -91,6 +91,10 @@ public class BasicDataFrameUnitTest {
          logger.info("row: {}", r);
       }
 
+      DataFrame filtered = dataFrame.filter(r -> r.getCell("input1") == 1.0);
+      System.out.println("filtered: " + filtered.rowCount());
+      assertThat(filtered.rowCount()).isEqualTo(3);
+
    }
 
    @Test

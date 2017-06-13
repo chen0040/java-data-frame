@@ -294,6 +294,7 @@ public class BasicDataFrame implements DataFrame, Serializable {
          if(predicate.test(row)){
             DataRow newRow = clone.newRow();
             newRow.copy(row);
+            clone.addRow(newRow);
          }
       }
       clone.lock();
