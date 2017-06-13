@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class RegressionEvaluator {
 
-   private List<Double> expectedOutputValues = new ArrayList<>();
+   private List<Double> predictedOutputValues = new ArrayList<>();
    private List<Double> actualOutputValues = new ArrayList<>();
 
    // mean square error penalize series that have values which has large error
@@ -24,24 +24,24 @@ public class RegressionEvaluator {
    private double RSquare = 0;
 
    public void reset(){
-      expectedOutputValues.clear();
+      predictedOutputValues.clear();
       actualOutputValues.clear();
    }
 
-   public void evaluate(double expected,double actual){
-      expectedOutputValues.add(expected);
+   public void evaluate(double predicted,double actual){
+      predictedOutputValues.add(predicted);
       actualOutputValues.add(actual);
    }
 
    public void update(){
-      int size = expectedOutputValues.size();
+      int size = predictedOutputValues.size();
 
       if(size == 0) return;
 
       double mu_expected = 0;
 
       for(int i=0; i < size; ++i) {
-         double expected = expectedOutputValues.get(i);
+         double expected = predictedOutputValues.get(i);
          mu_expected += expected;
       }
       mu_expected /= size;
@@ -51,7 +51,7 @@ public class RegressionEvaluator {
       double SS_total = 0;
       double SS_res = 0;
       for(int i=0; i < size; ++i){
-         double expected = expectedOutputValues.get(i);
+         double expected = predictedOutputValues.get(i);
          double actual = actualOutputValues.get(i);
 
          double difference = expected - actual;
