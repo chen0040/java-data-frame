@@ -37,5 +37,7 @@ public class BinaryClassifierEvaluatorUnitTest {
       assertThat(evaluator.getTrueNegative()).isEqualTo(0);
       assertThat(evaluator.getTruePositive()).isEqualTo(50);
       assertThat(evaluator.getFalsePositive()).isEqualTo(0);
+
+      System.out.println(evaluator.getSummary());
    }
 }
