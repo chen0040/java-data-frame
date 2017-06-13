@@ -99,8 +99,11 @@ public class BinaryClassifierEvaluator implements Serializable {
       this.accuracy = (double)(truePositive + trueNegative) / (truePositive + trueNegative + falsePositive + falseNegative);
 
       // fallout = 1 - specificity
-      this.fallout = (double)(falsePositive) / (falsePositive + trueNegative);
-
+      if(falsePositive + trueNegative == 0){
+         this.fallout = Double.POSITIVE_INFINITY;
+      } else {
+         this.fallout = (double) (falsePositive) / (falsePositive + trueNegative);
+      }
 
       this.misclassificationRate = (double)(falsePositive + falseNegative) / (truePositive + trueNegative + falsePositive + falseNegative);
 
