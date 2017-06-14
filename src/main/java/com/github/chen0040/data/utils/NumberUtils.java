@@ -33,7 +33,10 @@ public class NumberUtils {
          return (Boolean) obj ? 1.0 : 0.0;
       } else if(obj instanceof BigInteger) {
          return ((BigInteger)obj).doubleValue();
+      } else if(obj == null) {
+         return 0;
       } else {
+
          throw new NotImplementedException();
       }
    }

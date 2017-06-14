@@ -33,6 +33,21 @@ public class DataQueryLoadUnitTest {
    }
 
    @Test
+   public void test_load_libsvm() throws IOException {
+      DataFrame dataFrame = DataQuery.libsvm().from(FileUtils.getResource("heart_scale.txt")).build();
+      logger.info("{}", dataFrame.head(2));
+   }
+
+   @Test
+   public void test_load_libsvm_with_columns() throws IOException {
+      DataFrame dataFrame = DataQuery.libsvm().from(FileUtils.getResource("heart_scale.txt"))
+              .selectColumn(1).asInput("c1")
+              .selectColumn(2).asOutput("o1")
+              .build();
+      logger.info("{}", dataFrame.head(2));
+   }
+
+   @Test
    public void test_load_carmileage_dat() throws IOException {
       InputStream inputStream = FileUtils.getResource("carmileage.dat");
 
