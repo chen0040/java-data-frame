@@ -16,6 +16,8 @@ public class ClassifierEvaluatorUnitTest {
    @Test
    public void test_evaluate(){
       ClassifierEvaluator evaluator = new ClassifierEvaluator();
+      evaluator.reset();
+
       for(int i=0; i < 50; ++i) {
          String predicted = "class1";
          String actual = "class2";
@@ -31,7 +33,10 @@ public class ClassifierEvaluatorUnitTest {
       assertThat(evaluator.getMacroF1Score()).isEqualTo(1.0);
       assertThat(evaluator.getMicroF1Score()).isCloseTo(0.333, within(0.001));
 
-      System.out.println(evaluator.getSummary());
+      evaluator.report();
       System.out.println(evaluator.getConfusionMatrix().toString());
+      System.out.println("avg false positives: " + evaluator.avgFalsePositive());
+      System.out.println("avg true positives: " + evaluator.avgTruePositive());
+      evaluator.getFalloutByClass();
    }
 }
