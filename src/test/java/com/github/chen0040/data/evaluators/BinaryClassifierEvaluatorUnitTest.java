@@ -67,7 +67,7 @@ public class BinaryClassifierEvaluatorUnitTest {
       evaluator.setMisclassificationRate(0.1);
       evaluator.setPrecision(0.5);
       evaluator.setSensitivity(0.5);
-      
+
       evaluator.report();
    }
 }
