@@ -16,6 +16,8 @@ public class BinaryClassifierEvaluatorUnitTest {
    @Test
    public void test_evaluate(){
       BinaryClassifierEvaluator evaluator = new BinaryClassifierEvaluator();
+      evaluator.reset();
+
       for(int i=0; i < 50; i++){
          boolean actual = true;
          boolean predicted = false;
@@ -38,6 +40,34 @@ public class BinaryClassifierEvaluatorUnitTest {
       assertThat(evaluator.getTruePositive()).isEqualTo(50);
       assertThat(evaluator.getFalsePositive()).isEqualTo(0);
 
-      System.out.println(evaluator.getSummary());
+      evaluator.report();
+   }
+
+   @Test
+   public void test_other() {
+      int truePositive = 1;
+      int trueNegative = 1;
+      int falsePositive = 2;
+      int falseNegative = 2;
+      BinaryClassifierEvaluator evaluator = new BinaryClassifierEvaluator(truePositive, trueNegative, falsePositive, falseNegative);
+
+      evaluator.report();
+
+      evaluator.reset();
+      evaluator.setFalseNegative(10);
+      evaluator.setTrueNegative(10);
+      evaluator.setFalsePositive(10);
+      evaluator.setTruePositive(10);
+
+      evaluator.report();
+
+      evaluator.reset();
+
+      evaluator.setAccuracy(1.0);
+      evaluator.setMisclassificationRate(0.1);
+      evaluator.setPrecision(0.5);
+      evaluator.setSensitivity(0.5);
+      
+      evaluator.report();
    }
 }
