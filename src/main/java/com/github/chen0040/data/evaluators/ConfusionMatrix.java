@@ -14,47 +14,26 @@ import java.util.stream.Collectors;
 /**
  * Created by xschen on 11/16/16.
  */
-public class ConfusionMatrix implements Serializable {
-   private static final long serialVersionUID = 8446651320939507735L;
+public class ConfusionMatrix {
    private Map<TupleTwo<String, String>, Integer> matrix = new HashMap<>();
    private Set<String> labels = new HashSet<>();
 
-   private transient ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-
    public void incCount(String actual, String predicted) {
-      readWriteLock.writeLock().lock();
-      try{
-         labels.add(actual);
-         labels.add(predicted);
-         TupleTwo<String, String> key = new TupleTwo<>(actual, predicted);
-         matrix.put(key, matrix.getOrDefault(key, 0) + 1);
-      }finally {
-         readWriteLock.writeLock().unlock();
-      }
+      labels.add(actual);
+      labels.add(predicted);
+      TupleTwo<String, String> key = new TupleTwo<>(actual, predicted);
+      matrix.put(key, matrix.getOrDefault(key, 0) + 1);
    }
 
    public List<String> getLabels(){
       List<String> result = new ArrayList<>();
 
-      readWriteLock.readLock().lock();
-      try {
-         result.addAll(labels.stream().collect(Collectors.toList()));
-      } finally {
-         readWriteLock.readLock().unlock();
-      }
+      result.addAll(labels.stream().collect(Collectors.toList()));
 
       return result;
    }
 
-   public void setLabels(List<String> labels) {
-      readWriteLock.writeLock().lock();
-      try {
-         this.labels.clear();
-         this.labels.addAll(labels);
-      }finally {
-         readWriteLock.writeLock().unlock();
-      }
-   }
+
 
    // sum of a row representing class c, which is sum of cases that truely belong to class c
    public int getRowSum(String actual) {
@@ -82,39 +61,13 @@ public class ConfusionMatrix implements Serializable {
 
 
    public int getCount(String actual, String predicted) {
-      int value = 0;
-      readWriteLock.readLock().lock();
-      try{
-         value = matrix.getOrDefault(new TupleTwo<>(actual, predicted), 0);
-      }finally {
-         readWriteLock.readLock().unlock();
-      }
-      return value;
+      return matrix.getOrDefault(new TupleTwo<>(actual, predicted), 0);
    }
 
 
    public void reset() {
-      readWriteLock.writeLock().lock();
-      try {
-         matrix.clear();
-      } finally {
-         readWriteLock.writeLock().unlock();
-      }
+      matrix.clear();
    }
 
 
-   public Map<TupleTwo<String, String>, Integer> getMatrix() {
-      return matrix;
-   }
-
-
-   public void setMatrix(Map<TupleTwo<String, String>, Integer> matrix) {
-      this.matrix = matrix;
-   }
-
-   private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-      in.defaultReadObject();
-
-      readWriteLock = new ReentrantReadWriteLock();
-   }
 }
