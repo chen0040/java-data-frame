@@ -6,6 +6,7 @@ import com.github.chen0040.data.frame.DataFrame;
 import com.github.chen0040.data.frame.DataRow;
 import com.github.chen0040.data.frame.InputDataColumn;
 import com.github.chen0040.data.frame.OutputDataColumn;
+import com.github.chen0040.data.utils.transforms.Standardization;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ public class Scaler {
       means.putAll(that.means);
       sds.putAll(that.sds);
    }
-
 
    public void fit(DataFrame frame) {
 
