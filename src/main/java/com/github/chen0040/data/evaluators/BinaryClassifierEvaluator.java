@@ -24,9 +24,6 @@ public class BinaryClassifierEvaluator implements Serializable {
    private double misclassificationRate;
 
    private double f1Score;
-   private int totalPredictedAnomalyDayCount;
-   private int simulatedAnomalyTimeWindowCount;
-   private Map<String, Integer> predictedAnomalyDayCountByDayOfWeek;
    private long startTime = 0L;
    private long endTime = 0L;
 
@@ -109,36 +106,6 @@ public class BinaryClassifierEvaluator implements Serializable {
 
       this.f1Score = 2 * (precision * recall) / (precision + recall);
       isValid = true;
-   }
-
-
-   public void setTotalPredictedAnomalyDayCount(int totalPredictedAnomalyDayCount) {
-      this.totalPredictedAnomalyDayCount = totalPredictedAnomalyDayCount;
-   }
-
-
-   public int getTotalPredictedAnomalyDayCount() {
-      return totalPredictedAnomalyDayCount;
-   }
-
-
-   public void setSimulatedAnomalyTimeWindowCount(int simulatedAnomalyTimeWindowCount) {
-      this.simulatedAnomalyTimeWindowCount = simulatedAnomalyTimeWindowCount;
-   }
-
-
-   public int getSimulatedAnomalyTimeWindowCount() {
-      return simulatedAnomalyTimeWindowCount;
-   }
-
-
-   public void setPredictedAnomalyDayCountByDayOfWeek(Map<String, Integer> predictedAnomalyDayCountByDayOfWeek) {
-      this.predictedAnomalyDayCountByDayOfWeek = predictedAnomalyDayCountByDayOfWeek;
-   }
-
-
-   public Map<String, Integer> getPredictedAnomalyDayCountByDayOfWeek() {
-      return predictedAnomalyDayCountByDayOfWeek;
    }
 
 
