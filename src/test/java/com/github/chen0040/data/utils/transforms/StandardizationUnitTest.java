@@ -48,6 +48,7 @@ public class StandardizationUnitTest {
    public void test_list_of_double_array() throws CloneNotSupportedException {
       List<double[]> data = new ArrayList<>();
       data.add(new double[] { 1.0, 1.0, 1.0, 1.0 });
+      data.add(new double[] { 0.0, 0.0, 0.0, 0.0 });
 
 
       Standardization coding = new Standardization(data);
