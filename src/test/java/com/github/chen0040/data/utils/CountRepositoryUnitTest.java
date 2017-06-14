@@ -31,6 +31,6 @@ public class CountRepositoryUnitTest {
       assertThat(repository.getValue("eventA", "eventB", "eventC")).isEqualTo(1.0);
       assertThat(repository.getProbability("eventA")).isEqualTo(0.5);
 
-      
+
    }
 }

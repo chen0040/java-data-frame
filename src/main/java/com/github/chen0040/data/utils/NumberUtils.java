@@ -22,7 +22,7 @@ public class NumberUtils {
       if(obj instanceof Double){
          return (Double)obj;
       } else if(obj instanceof String) {
-         return toDouble((String)obj);
+         return Double.parseDouble((String)obj);
       } else if(obj instanceof Float) {
          return ((Float)obj).doubleValue();
       } else if(obj instanceof Integer) {
