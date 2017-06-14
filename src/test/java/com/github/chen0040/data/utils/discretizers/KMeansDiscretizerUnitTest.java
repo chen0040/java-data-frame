@@ -10,6 +10,8 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
 
 /**
  * Created by xschen on 21/5/2017.
@@ -45,6 +47,9 @@ public class KMeansDiscretizerUnitTest {
       System.out.println("categorical column count: " + newFrame.getAllColumns().stream().filter(DataColumn::isCategorical).count());
       System.out.println("numerical column count: " + newFrame.getAllColumns().stream().filter(DataColumn::isNumerical).count());
 
+      KMeansDiscretizer clone = discretizer.makeCopy();
+
+      assertThat(clone.transform(dataFrame.row(0))).isEqualToComparingFieldByField(discretizer.transform(dataFrame.row(0)));
 
    }
 }
