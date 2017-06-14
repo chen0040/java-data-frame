@@ -21,16 +21,7 @@ public class CsvUtils {
    public static final String quoteSplitPM = "(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
    private static final Logger logger = LoggerFactory.getLogger(CsvUtils.class);
 
-   public static double atof(String s)
-   {
-      double d = Double.valueOf(s).doubleValue();
-      if (Double.isNaN(d) || Double.isInfinite(d))
-      {
-         System.err.print("NaN or Infinity in input\n");
-         System.exit(1);
-      }
-      return(d);
-   }
+
 
    public static int atoi(String s)
    {
