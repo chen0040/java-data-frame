@@ -7,6 +7,9 @@ import com.github.chen0040.data.frame.DataRow;
 import com.github.chen0040.data.utils.CollectionUtils;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.testng.Assert.*;
 
@@ -17,7 +20,7 @@ import static org.testng.Assert.*;
 public class StandardizationUnitTest {
 
    @Test
-   public void test_simple(){
+   public void test_data_frame(){
       DataFrame frame = new BasicDataFrame();
       DataRow row = frame.newRow();
       row.setCell("c1", 1.0);
@@ -39,5 +42,22 @@ public class StandardizationUnitTest {
       double[] y = coding.standardize(new double[] { 1, 0, 1, 0});
       System.out.println(CollectionUtils.toList(y));
       assertThat(y).hasSize(4);
+   }
+
+   @Test
+   public void test_list_of_double_array() throws CloneNotSupportedException {
+      List<double[]> data = new ArrayList<>();
+      data.add(new double[] { 1.0, 1.0, 1.0, 1.0 });
+
+
+      Standardization coding = new Standardization(data);
+      double[] y = coding.standardize(new double[] {1, 0, 1, 0});
+
+      System.out.println(CollectionUtils.toList(y));
+      assertThat(y).hasSize(4);
+
+      Standardization clone = (Standardization)coding.clone();
+      double[] y2 = clone.standardize(new double[] {1, 0, 1,0});
+      assertThat(y).isEqualTo(y2);
    }
 }
